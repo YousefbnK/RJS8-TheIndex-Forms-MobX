@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { observer } from "mobx-react";
 
-// import BookForm from "./forms/BookForm";
+import BookForm from "./forms/BookForm";
 import Modal from "react-responsive-modal";
 
 class AddBookModal extends Component {
@@ -18,12 +19,11 @@ class AddBookModal extends Component {
       <div>
         <Modal open={open} onClose={this.onCloseModal} center>
           {/* You'll need to build a BookForm component before uncommenting the following line */}
-          {/* <BookForm author={this.props.author} /> */}
-          <h1>YOU NEED TO ACTUALLY MAKE A BOOK FORM!!!!!!</h1>
+          <BookForm author={this.props.author} closeModal={this.onCloseModal} />
         </Modal>
         <input type="button" onClick={this.onOpenModal} value="Add New Book!" />
       </div>
     );
   }
 }
-export default AddBookModal;
+export default observer(AddBookModal);

@@ -1,12 +1,18 @@
 import { decorate, observable, computed } from "mobx";
 import { instance } from "./instance";
 
+function errToArray(err) {
+  return Object.keys(err).map(key => `${key}: ${err[key]}`);
+}
+
 class BookStore {
   books = [];
 
   query = "";
 
   loading = true;
+
+  errors = null;
 
   fetchBooks = async () => {
     try {
@@ -23,6 +29,19 @@ class BookStore {
     });
   }
 
+  addBook = async (newBook, author) => {
+    console.log("OMG ID's", author.books);
+    try {
+      const res = await instance.post("books/", newBook);
+      const book = res.data;
+      this.books.unshift(book);
+      author.books.push(book.id);
+      this.errors = null;
+    } catch (err) {
+      this.errors = errToArray(err.response.data);
+    }
+  };
+
   getBookById = id => this.books.find(book => +book.id === +id);
 
   getBooksByColor = color =>
@@ -33,6 +52,7 @@ decorate(BookStore, {
   books: observable,
   query: observable,
   loading: observable,
+  errors: observable,
   filteredBooks: computed
 });
 
